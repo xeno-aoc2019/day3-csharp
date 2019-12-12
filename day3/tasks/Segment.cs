@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using Microsoft.VisualBasic.CompilerServices;
 using static tasks.Direction;
 
 namespace tasks
@@ -9,13 +11,16 @@ namespace tasks
         private Point end1;
         private Point end2;
         private Direction direction;
+        private int distance;
         private Segment previous;
         private bool isOrigo = false;
+        private int cost;
+        private bool reverse = false;
 
         public Segment(String step, Segment previous)
         {
             direction = DirectionFactory.ToDirection(step.ToCharArray()[0]);
-            var distance = int.Parse(step.Substring(1));
+            distance = int.Parse(step.Substring(1));
             this.previous = previous;
             this.end1 = previous.end2;
             this.end2 = direction switch
@@ -25,24 +30,30 @@ namespace tasks
                 Left => end1.plusX(-distance),
                 Right => end1.plusX(distance)
             };
+            this.cost = previous.cost + previous.distance;
         }
 
         private Segment()
         {
             end1 = new Point(0, 0);
             end2 = new Point(0, 0);
+            cost = 0;
+            distance = 0;
             isOrigo = true;
         }
 
-        private Segment (Segment other, Segment previous, bool reverse)
+        private Segment(Segment other, Segment previous, bool reverse)
         {
+            this.reverse = reverse;
             this.end1 = reverse ? other.end2 : other.end1;
             this.end2 = reverse ? other.end1 : other.end2;
             this.direction = other.direction;
             this.previous = previous;
             this.isOrigo = other.isOrigo;
+            this.cost = other.cost;
+            this.distance = other.distance;
         }
-        
+
         public static Segment origo()
         {
             return new Segment();
@@ -60,14 +71,15 @@ namespace tasks
 
         public override string ToString()
         {
-            return "Segment(" + end1 + "-" + end2 + " "+ direction +")";
+            return "Segment(" + end1 + "-" + end2 + " " + direction + ")";
         }
 
 
         public string PathString()
         {
             if (isOrigo) return "(•)";
-            return "Segment(" + end1 + "-" + end2 + " "+direction+") -> " + previous.PathString();
+            return "Segment((" + end1.X + "," + end1.Y + ")-(" + end2.X + "," + end2.Y + "):" + cost + " " + direction +
+                   ") -> " + previous.PathString();
         }
 
         public LinkedList<Segment> horizontals()
@@ -129,5 +141,25 @@ namespace tasks
         public Point End1 => end1;
 
         public Point End2 => end2;
+
+        public int Distance => distance;
+
+        public int Cost(Point p)
+        {
+            if (isHorizontal())
+            {
+                var localCost = reverse ? Math.Abs(end2.X - p.X) : Math.Abs(p.X - end1.X);
+                if (localCost < 1) Console.WriteLine("LocalCost: " + localCost);
+                Console.WriteLine("COST:" + p + " " + this + " local=" + localCost + " cost=" + cost);
+                return cost + localCost;
+            }
+            else
+            {
+                var localCost = reverse ? Math.Abs(end2.Y - p.Y) : Math.Abs(p.Y - end1.Y);
+                if (localCost < 1) Console.WriteLine("LocalCost: " + localCost);
+                Console.WriteLine("COST:" + p + " " + this + " local=" + localCost + " cost=" + cost);
+                return cost + localCost;
+            }
+        }
     }
 }

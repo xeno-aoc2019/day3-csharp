@@ -8,20 +8,20 @@ namespace tasks
         public Intersection(Point point, int cost)
         {
             this.point = point;
-            this.cost = cost;
+            this.cost = cost == 0 ? int.MaxValue : cost;
         }
 
         public Intersection(int x, int y, int cost)
         {
             this.point = new Point(x, y);
-            this.cost = cost;
+            this.cost = cost == 0 ? int.MaxValue : cost;
         }
 
-        public Intersection(int x, int y)
-        {
-            this.point = new Point(x, y);
-            this.cost = -1;
-        }
+        // public Intersection(int x, int y)
+        // {
+        //     this.point = new Point(x, y);
+        //     this.cost = -1;
+        // }
 
         public Point Point => point;
 
