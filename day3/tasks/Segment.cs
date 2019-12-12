@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using Microsoft.VisualBasic.CompilerServices;
 using static tasks.Direction;
 
 namespace tasks
@@ -17,7 +15,7 @@ namespace tasks
         private int cost;
         private bool reverse = false;
 
-        public Segment(String step, Segment previous)
+        public Segment(string step, Segment previous)
         {
             direction = DirectionFactory.ToDirection(step.ToCharArray()[0]);
             distance = int.Parse(step.Substring(1));
@@ -28,7 +26,8 @@ namespace tasks
                 Up => end1.plusY(distance),
                 Down => end1.plusY(-distance),
                 Left => end1.plusX(-distance),
-                Right => end1.plusX(distance)
+                Right => end1.plusX(distance),
+                _ => throw new Exception("Goodbye cruel world")
             };
             this.cost = previous.cost + previous.distance;
         }
@@ -150,14 +149,12 @@ namespace tasks
             {
                 var localCost = reverse ? Math.Abs(end2.X - p.X) : Math.Abs(p.X - end1.X);
                 if (localCost < 1) Console.WriteLine("LocalCost: " + localCost);
-                Console.WriteLine("COST:" + p + " " + this + " local=" + localCost + " cost=" + cost);
                 return cost + localCost;
             }
             else
             {
                 var localCost = reverse ? Math.Abs(end2.Y - p.Y) : Math.Abs(p.Y - end1.Y);
                 if (localCost < 1) Console.WriteLine("LocalCost: " + localCost);
-                Console.WriteLine("COST:" + p + " " + this + " local=" + localCost + " cost=" + cost);
                 return cost + localCost;
             }
         }

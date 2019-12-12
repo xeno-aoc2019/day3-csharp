@@ -38,6 +38,7 @@ namespace tasks
             {
                 return int.MaxValue;
             }
+
             return point.X + point.Y;
         }
     }

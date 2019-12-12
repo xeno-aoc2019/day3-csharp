@@ -96,8 +96,8 @@ namespace tasks
             var others = path2.Normalize().ToList();
             var intersects = Intersects(segments, others);
             Console.WriteLine("*** Intersects ***");
-            Intersection shortest = new Intersection(0, 0, int.MaxValue);
-            Intersection cheapest = new Intersection(0, 0, int.MaxValue);
+            var shortest = new Intersection(0, 0, int.MaxValue);
+            var cheapest = new Intersection(0, 0, int.MaxValue);
             foreach (var intersection in intersects)
             {
                 if (intersection.ManhattanDistance() < shortest.ManhattanDistance())
@@ -112,7 +112,8 @@ namespace tasks
                     cheapest = intersection;
                 }
             }
-            Console.WriteLine("Cheapest: "+cheapest.Cost);
+
+            Console.WriteLine("Cheapest: " + cheapest.Cost);
             return shortest;
         }
     }
