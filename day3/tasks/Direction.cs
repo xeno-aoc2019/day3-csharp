@@ -11,11 +11,11 @@ namespace tasks
         Right
     }
 
-    public class DirectionFactory
+    public static class DirectionFactory
     {
         public static Direction ToDirection(char c)
         {
-            return c switch
+            var direction = c switch
             {
                 'U' => Direction.Up,
                 'D' => Direction.Down,
@@ -23,6 +23,8 @@ namespace tasks
                 'R' => Direction.Right,
                 _ => throw new InvalidOperationException("Invalid direction: " + c)
             };
+            // Console.WriteLine("char="+c+" dir="+direction);
+            return direction;
         }
     }
 }
